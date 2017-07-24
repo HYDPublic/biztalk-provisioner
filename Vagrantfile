@@ -5,6 +5,9 @@
 # https://github.com/erran-r7/multiple_vagrantfiles
 # winrm
 # http://www.hurryupandwait.io/blog/understanding-and-troubleshooting-winrm-connection-and-authentication-a-thrill-seekers-guide-to-adventure
+# great bootstrap script
+# https://gist.githubusercontent.com/masterzen/6714787/raw
+# http://www.masterzen.fr/2014/01/11/bootstrapping-windows-servers-with-puppet/
 load File.expand_path('../Vagrantfile.setup', __FILE__)
 
 Vagrant.configure(2) do |config|
