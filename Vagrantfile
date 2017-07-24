@@ -24,6 +24,10 @@ Vagrant.configure(2) do |config|
       config2.vm.provider :aws do |ec2, override|
         # config for vagrant-aws-winrm plugin
         override.winrm.password = "VagrantRocks"
+
+        # synced folders do not appear to work
+        override.vm.synced_folder ".", "/vagrant", disabled: true
+
         ec2.keypair_name = $keypair_name
         ec2.access_key_id = $access_key_id
         ec2.secret_access_key = $secret_access_key
