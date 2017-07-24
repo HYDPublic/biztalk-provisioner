@@ -1,0 +1,35 @@
+#######
+# Setup
+#######
+
+##################
+# required plugins
+##################
+unless Vagrant.has_plugin?("vagrant-aws")
+  raise "Vagrant AWS Plugin required! Please run vagrant plugin install vagrant-aws first."
+end
+
+
+unless Vagrant.has_plugin?("vagrant-awsinfo")
+  raise "Vagrant AWSInfo Plugin required! Please run vagrant plugin install vagrant-awsinfo first."
+end
+
+# https://github.com/johntdyer/vagrant-awsinfo
+# read env vars and store them
+# Variables have to be global to be accessible from main Vagrantfile
+# ref: http://stackoverflow.com/a/1047482/682912
+$keypair_name = ENV['VAGRANT_AWS_KEYPAIR_NAME']
+$access_key_id = ENV['VAGRANT_AWS_ACCESS_KEY']
+$secret_access_key = ENV['VAGRANT_AWS_SECRET_KEY']
+$security_groups = ENV['VAGRANT_AWS_SECURITY_GROUP']
+$private_key_path = ENV['VAGRANT_AWS_KEY_PATH']
+
+# windows server 2012 R2 required for BizTalk 2013 R2
+$aws_ami = "ami-93acd5fc"
+$aws_region = "ap-south-1"
+$aws_zone = "ap-south-1a"
+
+# min 4 GB RAM needed for BizTalk 2013. increase as necessary.
+$aws_instance_type = "t2.medium"
+# Names of the machines as visible in AWS Console
+$ec2_instances = ["biztalk-server"]
