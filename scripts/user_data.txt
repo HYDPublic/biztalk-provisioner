@@ -1,4 +1,6 @@
 <powershell>
+# Unrestricted execution
+Set-ExecutionPolicy Unrestricted
 
 # Disable Complex Passwords
 # Reference: http://vlasenko.org/2011/04/27/removing-password-complexity-requirements-from-windows-server-2008-core/

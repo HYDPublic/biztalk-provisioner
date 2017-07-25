@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
         }
 
         # Enable WinRM on the instance
-        ec2.user_data = File.read("user_data.txt")
+        ec2.user_data = File.read("scripts/user_data.txt")
       end
     end
   end
@@ -53,5 +53,6 @@ Vagrant.configure(2) do |config|
   # PROVISIONING
   ###################
 
+  config.vm.provision "shell", path: "scripts/install.ps1", powershell_args: "-executionpolicy unrestricted"
 
 end
