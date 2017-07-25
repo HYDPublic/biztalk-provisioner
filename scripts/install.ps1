@@ -34,6 +34,7 @@ cd $Env:USERPROFILE
 Set-Location -Path $Env:USERPROFILE
 [Environment]::CurrentDirectory=(Get-Location -PSProvider FileSystem).ProviderPath
 
+$client = new-object System.Net.WebClient
 
 
 #.net 4
@@ -81,3 +82,51 @@ if ($IsCore)
     DISM /Online /Enable-Feature /FeatureName:NetFx2-ServerCore /FeatureName:NetFx2-ServerCore-WOW64 /FeatureName:NetFx3-ServerCore /FeatureName:NetFx3-ServerCore-WOW64
     Add-Content $log -value "Enabled .NET frameworks 2 and 3 for x86 and x64"
 }
+
+#7zip
+$7zUri = if ($Is32Bit) { 'http://sourceforge.net/projects/sevenzip/files/7-Zip/9.22/7z922.msi/download' } `
+    else { 'http://sourceforge.net/projects/sevenzip/files/7-Zip/9.22/7z922-x64.msi/download' }
+
+$client.DownloadFile( $7zUri, '7z922.msi')
+Start-Process -FilePath "msiexec.exe" -ArgumentList '/i 7z922.msi /norestart /q INSTALLDIR="c:\program files\7-zip"' -Wait
+SetX Path "${Env:Path};C:\Program Files\7-zip" /m
+$Env:Path += ';C:\Program Files\7-Zip'
+del 7z922.msi
+Add-Content $log -value "Installed 7-zip from $7zUri and updated path"
+
+
+#vc 2010 redstributable
+$vcredist = if ($Is32Bit) { 'http://download.microsoft.com/download/5/B/C/5BC5DBB3-652D-4DCE-B14A-475AB85EEF6E/vcredist_x86.exe'} `
+    else { 'http://download.microsoft.com/download/3/2/2/3224B87F-CFA0-4E70-BDA3-3DE650EFEBA5/vcredist_x64.exe' }
+
+$client.DownloadFile( $vcredist, 'vcredist.exe')
+Start-Process -FilePath 'C:\Users\Administrator\vcredist.exe' -ArgumentList '/norestart /q' -Wait
+del vcredist.exe
+Add-Content $log -value "Installed VC++ 2010 Redistributable from $vcredist and updated path"
+
+#vc 2008 redstributable
+$vcredist = if ($Is32Bit) { 'http://download.microsoft.com/download/d/d/9/dd9a82d0-52ef-40db-8dab-95376989c03/vcredist_x86.exe'} `
+    else { 'http://download.microsoft.com/download/d/2/4/d242c3fb-da5a-4542-ad66-f9661d0a8d19/vcredist_x64.exe' }
+
+$client.DownloadFile( $vcredist, 'vcredist.exe')
+Start-Process -FilePath 'C:\Users\Administrator\vcredist.exe' -ArgumentList '/norestart /q' -Wait
+del vcredist.exe
+Add-Content $log -value "Installed VC++ 2008 Redistributable from $vcredist and updated path"
+
+#curl
+$curlUri = if ($Is32Bit) { 'http://www.paehl.com/open_source/?download=curl_724_0_ssl.zip' } `
+    else { 'http://curl.haxx.se/download/curl-7.23.1-win64-ssl-sspi.zip' }
+
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+$client.DownloadFile( $curlUri, 'curl.zip')
+&7z e curl.zip `-o`"c:\program files\curl`"
+if ($Is32Bit)
+{
+    $client.DownloadFile( 'http://www.paehl.com/open_source/?download=libssl.zip', 'libssl.zip')
+    &7z e libssl.zip `-o`"c:\program files\curl`"
+    del libssl.zip
+}
+SetX Path "${Env:Path};C:\Program Files\Curl" /m
+$Env:Path += ';C:\Program Files\Curl'
+del curl.zip
+Add-Content $log -value "Installed Curl from $curlUri and updated path"
