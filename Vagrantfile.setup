@@ -8,6 +8,9 @@
 unless Vagrant.has_plugin?("vagrant-aws")
   raise "Vagrant AWS Plugin required! Please run vagrant plugin install vagrant-aws first."
 end
+unless Vagrant.has_plugin?("vagrant-awsinfo")
+  raise "Vagrant AWS Plugin required! Please run vagrant plugin install vagrant-aws first."
+end
 
 # read env vars and store them
 # Variables have to be global to be accessible from main Vagrantfile

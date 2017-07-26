@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
         # config for vagrant-aws-winrm plugin
         override.winrm.password = "VagrantRocks"
 
-        # synced folders do not appear to work
+        # issue #5: synced folders do not appear to work
         override.vm.synced_folder ".", "/vagrant", disabled: true
 
         ec2.keypair_name = $keypair_name
@@ -54,5 +54,5 @@ Vagrant.configure(2) do |config|
   ###################
 
   config.vm.provision "shell", path: "scripts/install.ps1", powershell_args: "-executionpolicy unrestricted"
-
+  config.vm.provision "shell", path: "scripts/rsync.ps1", args: "-localPath C:\\Users\\vvenu3\\work\\biztalk-provisioner -remotePath C:\\Users\\Administrator\\biztalk-provisioner -username Administrator -password VagrantRocks", powershell_args: "-executionpolicy unrestricted"
 end
