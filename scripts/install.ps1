@@ -6,7 +6,6 @@
 # https://gist.githubusercontent.com/masterzen/6714787/raw
 ####
 
-
 Start-Transcript -Path 'c:\bootstrap-transcript.txt' -Force
 # strict mode for syntax
 Set-StrictMode -Version Latest
@@ -33,6 +32,10 @@ Add-Content $log -value "Is Core [$IsCore]"
 cd $Env:USERPROFILE
 Set-Location -Path $Env:USERPROFILE
 [Environment]::CurrentDirectory=(Get-Location -PSProvider FileSystem).ProviderPath
+
+# fixing issue downloading files
+# https://github.com/agilityroots/biztalk-provisioner/issues/4#issuecomment-317935380
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $client = new-object System.Net.WebClient
 
@@ -115,18 +118,32 @@ Add-Content $log -value "Installed VC++ 2008 Redistributable from $vcredist and 
 
 #curl
 $curlUri = if ($Is32Bit) { 'http://www.paehl.com/open_source/?download=curl_724_0_ssl.zip' } `
-    else { 'http://curl.haxx.se/download/curl-7.23.1-win64-ssl-sspi.zip' }
+    else { 'https://dl.uxnr.de/build/curl/curl_winssl_msys2_mingw64_stc/curl-7.53.1/curl-7.53.1.zip' }
 
-[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-$client.DownloadFile( $curlUri, 'curl.zip')
-&7z e curl.zip `-o`"c:\program files\curl`"
-if ($Is32Bit)
-{
-    $client.DownloadFile( 'http://www.paehl.com/open_source/?download=libssl.zip', 'libssl.zip')
-    &7z e libssl.zip `-o`"c:\program files\curl`"
-    del libssl.zip
+if ((Test-Path "C:\Program Files\curl") -eq $false) {
+  $client.DownloadFile( $curlUri, 'curl.zip')
+  &7z e curl.zip `-o`"c:\program files\curl`" `-y
+  if ($Is32Bit)
+  {
+      $client.DownloadFile( 'http://www.paehl.com/open_source/?download=libssl.zip', 'libssl.zip')
+      &7z e libssl.zip `-o`"c:\program files\curl`" `-y
+      del libssl.zip
+  }
 }
 SetX Path "${Env:Path};C:\Program Files\Curl" /m
 $Env:Path += ';C:\Program Files\Curl'
-del curl.zip
+del curl.zip -ErrorAction SilentlyContinue
 Add-Content $log -value "Installed Curl from $curlUri and updated path"
+
+# install puppet
+#https://downloads.puppetlabs.com/windows/puppet-3.2.4.msi
+$ErrorActionPreference = "Continue"
+& 'C:\Program Files\Curl\curl.exe' -# -G -k -L https://downloads.puppetlabs.com/windows/puppet-3.2.4.msi -o puppet-3.2.4.msi 2>$null > "$log"
+$ErrorActionPreference = "Stop"
+Start-Process -FilePath "msiexec.exe" -ArgumentList '/qn /passive /i puppet-3.2.4.msi /norestart' -Wait
+SetX Path "${Env:Path};C:\Program Files\Puppet Labs\Puppet\bin" /m
+&sc.exe config puppet start= demand
+Add-Content $log -value "Installed Puppet"
+
+&netsh firewall set portopening tcp 445 smb enable
+Add-Content $log -value "Ran firewall config to allow incoming smb/tcp"
