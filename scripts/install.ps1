@@ -140,8 +140,8 @@ Add-Content $log -value "Installed Curl from $curlUri and updated path"
 $ErrorActionPreference = "Continue"
 & 'C:\Program Files\Curl\curl.exe' -# -G -k -L https://downloads.puppetlabs.com/windows/puppet-3.2.4.msi -o puppet-3.2.4.msi 2>$null > "$log"
 $ErrorActionPreference = "Stop"
-Start-Process -FilePath "msiexec.exe" -ArgumentList '/qn /passive /i puppet-3.2.4.msi /norestart' -Wait
-SetX Path "${Env:Path};C:\Program Files\Puppet Labs\Puppet\bin" /m
+Start-Process -FilePath 'msiexec.exe' -ArgumentList '/qn /passive /i puppet-3.2.4.msi /norestart INSTALLDIR="C:\puppet"' -Wait
+SetX Path "${Env:Path};C:\puppet\bin" /m
 &sc.exe config puppet start= demand
 Add-Content $log -value "Installed Puppet"
 

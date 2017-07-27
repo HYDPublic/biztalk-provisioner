@@ -59,5 +59,16 @@ Vagrant.configure(2) do |config|
   config.vm.provision :host_shell do |host_shell|
       host_shell.inline = 'powershell -executionpolicy unrestricted ./scripts/rsync.ps1 -localPath C:/Users/vvenu3/work/biztalk-provisioner -remotePath C:/Users/Administrator/biztalk-provisioner -username Administrator -password VagrantRocks'
   end
-  # config.vm.provision "shell", path: "scripts/rsync.ps1", args: "-localPath C:\\Users\\vvenu3\\work\\biztalk-provisioner -remotePath C:\\Users\\Administrator\\biztalk-provisioner -username Administrator -password VagrantRocks", powershell_args: "-executionpolicy unrestricted"
+
+
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = ["vm", "C:/Users/Administrator/biztalk-provisioner/manifests"]
+    puppet.manifest_file = "default.pp"
+    # TODO Application is currently symlinked:
+    # New-Item -ItemType SymbolicLink -Name 'Puppet' -Target 'C:\Program Files (x86)\Puppet Labs\Puppet'
+    puppet.binary_path = "C:/puppet/bin"
+  end
+
+
+
 end
