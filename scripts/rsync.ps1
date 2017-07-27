@@ -15,7 +15,8 @@ $port = 5985
 $awsInstanceName = "biztalk-server"
 Write-Host "-- Getting Instance IP..."
 
-#$ip = & "C:\HashiCorp\Vagrant\bin\vagrant.exe" awsinfo -m $awsInstanceName -k host
+
+$ip = "& `"C:\HashiCorp\Vagrant\bin\vagrant.exe`" awsinfo -m $awsInstanceName -k host"
 $ip = "ec2-13-126-116-43.ap-south-1.compute.amazonaws.com"
 Write-Host "-- Creating Session to $ip..."
 Enable-PSRemoting -force

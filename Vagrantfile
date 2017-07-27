@@ -53,6 +53,11 @@ Vagrant.configure(2) do |config|
   # PROVISIONING
   ###################
 
+
   config.vm.provision "shell", path: "scripts/install.ps1", powershell_args: "-executionpolicy unrestricted"
-  config.vm.provision "shell", path: "scripts/rsync.ps1", args: "-localPath C:\\Users\\vvenu3\\work\\biztalk-provisioner -remotePath C:\\Users\\Administrator\\biztalk-provisioner -username Administrator -password VagrantRocks", powershell_args: "-executionpolicy unrestricted"
+
+  config.vm.provision :host_shell do |host_shell|
+      host_shell.inline = 'powershell -executionpolicy unrestricted ./scripts/rsync.ps1 -localPath C:/Users/vvenu3/work/biztalk-provisioner -remotePath C:/Users/Administrator/biztalk-provisioner -username Administrator -password VagrantRocks'
+  end
+  # config.vm.provision "shell", path: "scripts/rsync.ps1", args: "-localPath C:\\Users\\vvenu3\\work\\biztalk-provisioner -remotePath C:\\Users\\Administrator\\biztalk-provisioner -username Administrator -password VagrantRocks", powershell_args: "-executionpolicy unrestricted"
 end
