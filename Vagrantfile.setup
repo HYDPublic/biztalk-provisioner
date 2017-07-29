@@ -29,6 +29,9 @@ $aws_ami = "ami-93acd5fc"
 $aws_region = "ap-south-1"
 $aws_zone = "ap-south-1a"
 
+# windows 2012 AMI username is always administrator
+$windows_username = "Administrator"
+
 # min 4 GB RAM needed for BizTalk 2013. increase as necessary.
 $aws_instance_type = "t2.medium"
 # Names of the machines as visible in AWS Console

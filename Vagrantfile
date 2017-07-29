@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
   config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
   config.vm.communicator = "winrm"
   # config for vagrant-aws-winrm plugin
-  config.winrm.username = "Administrator"
+  config.winrm.username = $windows_username
   config.winrm.transport = :plaintext
   config.winrm.basic_auth_only = true
   config.vm.guest = :windows
@@ -43,7 +43,6 @@ Vagrant.configure(2) do |config|
           'Name'         => "#{ec2_instance}"
         }
 
-        # Enable WinRM on the instance
         ec2.user_data = File.read("scripts/user_data.txt")
       end
     end
