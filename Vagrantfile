@@ -52,14 +52,16 @@ Vagrant.configure(2) do |config|
   # PROVISIONING
   ###################
 
-
+  # Install dependent tools including puppet
   config.vm.provision "shell", path: "scripts/install.ps1", powershell_args: "-executionpolicy unrestricted"
 
+  # sync current directory to remote server
+  $cmd = "powershell -executionpolicy unrestricted ./scripts/rsync.ps1 -localPath #{Dir.pwd} -remotePath C:/Users/Administrator/biztalk-provisioner -username Administrator -password VagrantRocks"
   config.vm.provision :host_shell do |host_shell|
-      host_shell.inline = 'powershell -executionpolicy unrestricted ./scripts/rsync.ps1 -localPath C:/Users/vvenu3/work/biztalk-provisioner -remotePath C:/Users/Administrator/biztalk-provisioner -username Administrator -password VagrantRocks'
+      host_shell.inline = $cmd
   end
 
-
+  # provision with puppet
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = ["vm", "C:/Users/Administrator/biztalk-provisioner/manifests"]
     puppet.manifest_file = "default.pp"

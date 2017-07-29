@@ -28,4 +28,4 @@ Write-Host "-- COPY --"
 Write-Host "-- FROM $localPath"
 Write-Host "-- TO $ip"
 Write-Host "-- DIR: $remotePath"
-Copy-Item -ToSession $session -Path $localPath -Destination $remotePath -Recurse
+Copy-Item -Force -ToSession $session -Path $localPath -Destination $remotePath -Recurse

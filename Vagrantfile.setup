@@ -11,8 +11,8 @@ required_plugins = ["vagrant-aws","vagrant-awsinfo","vagrant-host-shell"]
 required_plugins.each { |r|
   unless Vagrant.has_plugin?(r)
     $errMsg = $errMsg + "Vagrant Plugin #{r} required! Please run vagrant plugin install #{r} first.\n"
+    $pluginError = true
   end
-  $pluginError = true
 }
 if ($pluginError) then
   raise($errMsg)
