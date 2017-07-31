@@ -26,8 +26,11 @@ $secret_access_key = ENV['VAGRANT_AWS_SECRET_KEY']
 $security_groups = ENV['VAGRANT_AWS_SECURITY_GROUP']
 $private_key_path = ENV['VAGRANT_AWS_KEY_PATH']
 
+# allocate an elastic ip to prevent any guesswork of ip address.
+$aws_elastic_ip = ENV['VAGRANT_AWS_ELASTIC_IP']
+
 # windows server 2012 R2 required for BizTalk 2013 R2
-$aws_ami = "ami-93acd5fc"
+$aws_ami = "ami-3d770c52"
 $aws_region = "ap-south-1"
 $aws_zone = "ap-south-1a"
 

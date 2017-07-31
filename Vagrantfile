@@ -39,11 +39,10 @@ Vagrant.configure(2) do |config|
         ec2.availability_zone = $aws_zone
         ec2.ami = $aws_ami
         ec2.instance_type = $aws_instance_type
+        ec2.elastic_ip = $aws_elastic_ip
         ec2.tags = {
           'Name'         => "#{ec2_instance}"
         }
-
-        ec2.user_data = File.read("scripts/user_data.txt")
       end
     end
   end
@@ -52,11 +51,13 @@ Vagrant.configure(2) do |config|
   # PROVISIONING
   ###################
 
-  # Install dependent tools including puppet
-  config.vm.provision "shell", path: "scripts/install.ps1", powershell_args: "-executionpolicy unrestricted"
 
   # sync current directory to remote server
-  $cmd = "powershell -executionpolicy unrestricted ./scripts/rsync.ps1 -localPath #{Dir.pwd} -remotePath C:/Users/Administrator/biztalk-provisioner -username Administrator -password VagrantRocks"
+  $cmd = "powershell -executionpolicy unrestricted \
+    ./scripts/rsync.ps1 -localPath #{Dir.pwd} \
+    -remoteServer #{$aws_elastic_ip} \
+    -remotePath C:/Users/Administrator/biztalk-provisioner \
+    -username Administrator -password VagrantRocks"
   config.vm.provision :host_shell do |host_shell|
       host_shell.inline = $cmd
   end
