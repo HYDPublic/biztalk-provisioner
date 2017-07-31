@@ -27,4 +27,5 @@ Write-Host "-- COPY --"
 Write-Host "-- FROM $localPath"
 Write-Host "-- TO $ip"
 Write-Host "-- DIR: $remotePath"
-Copy-Item -Force -ToSession $session -Path $localPath -Destination $remotePath -Recurse
+# TODO remove remote directory if exists, before creation
+Copy-Item -Force -ToSession $session -Path "$localPath/*" -Destination $remotePath -Recurse -Exclude "$remotePath/.git"

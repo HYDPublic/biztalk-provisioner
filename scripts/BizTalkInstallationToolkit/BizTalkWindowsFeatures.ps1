@@ -11,8 +11,9 @@ Run the script on the server that requires the features
 cls
 Set-ExecutionPolicy RemoteSigned
 
-# Set Windows installation media path
-$AlternateSourcePath = Read-Host("Enter path to installation media (e.g. D:\sources\sxs)")
+# Vish: Windows installation media path changed to empty
+# checked that this worked during manual install
+$AlternateSourcePath = ""
 
 # Create the Servicing Registry Key and LocalSourcePath String Value
 New-Item -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\Servicing -Force

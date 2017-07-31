@@ -64,13 +64,18 @@ Vagrant.configure(2) do |config|
 
   # provision with puppet
   config.vm.provision :puppet do |puppet|
+    # remote manifest path
     puppet.manifests_path = ["vm", "C:/Users/Administrator/biztalk-provisioner/manifests"]
+    # remote module Path: https://github.com/mitchellh/vagrant/issues/2902
+    puppet.options = ["--modulepath C:/Users/Administrator/biztalk-provisioner/modules"]
     puppet.manifest_file = "default.pp"
-    # TODO Application is currently symlinked:
-    # New-Item -ItemType SymbolicLink -Name 'Puppet' -Target 'C:\Program Files (x86)\Puppet Labs\Puppet'
     puppet.binary_path = "C:/puppet/bin"
   end
 
+  # TODO
+  # automate installation of modules
+  # https://forge.puppet.com/puppetlabs/powershell
+  # https://forge.puppet.com/puppet/download_file/
 
 
 end
