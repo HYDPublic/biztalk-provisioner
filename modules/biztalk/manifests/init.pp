@@ -3,7 +3,7 @@ class biztalk {
   $stagingDir = 'C:/tmp'
   $biztalkStagingDir = "$stagingDir/biztalk"
   $zipCommand = join(['"C:/Program Files/7-zip/7z.exe"', ' x BTS2013R2Evaluation_EN.exe -y ',' -o"',$biztalkStagingDir,'"'])
-  $silentInstallCmd = "BTS2013R2Evaluation_EN.exe /quiet /norestart /addlocal all /cabpath C:\\Users\\Administrator\\Downloads\\"
+  $silentInstallCmd = "Setup.exe /quiet /norestart /addlocal all /cabpath C:\\Users\\Administrator\\Downloads\\"
 
   file { $stagingDir:
     ensure => 'directory',
@@ -21,28 +21,25 @@ class biztalk {
      logoutput => true,
      creates => "$biztalkStagingDir/BT Server/Setup.exe"
    } ~>
-   exec { "Download CAB" :
+   exec { "Download Prerequisite CAB" :
      command => file("biztalk/DownloadCAB.ps1"),
      cwd => $stagingDir,
      provider => powershell,
      logoutput => true,
      creates => "C:/Users/Administrator/Downloads/BtsRedistW2K12EN64.cab"
+   } ~>
+   exec { "Enable Biztalk Prerequisite Windows Features" :
+     command => file("biztalk/BizTalkWindowsFeatures.ps1"),
+     cwd => $stagingDir,
+     provider => powershell,
+     logoutput => true
+   } ~>
+   exec { "Enable SQL Prerequisite Windows Features" :
+     command => file("biztalk/SQLWindowsFeatures.ps1"),
+     cwd => $stagingDir,
+     provider => powershell,
+     logoutput => true
    }
-  # } ~>
-  # exec { "Download CAB" :
-  #   command => "./DownloadCAB.ps1 -BTVersion $btVersion -winversion $winVersion -bits $bits",
-  #   cwd => $stagingDir,
-  #   provider => powershell,
-  #   logoutput => true
-  # }
-
-  # TODO cab needs to be downloaded first:
-  # Download CAB: .\DownloadCAB.ps1 -BTVersion 2013R2 -winversion 2012R2 -bits 64
-  # this downloads to Downloads dir.
-
-  # this enables windows features for Biztalk
-  # next: .\BizTalkWindowsFeatures.ps1
-  # next: .\SQLWindowsFeatures.ps1
 
   # TODO run above command
 
