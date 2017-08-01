@@ -2,8 +2,9 @@ class biztalk {
   $downloadURL = "https://download.microsoft.com/download/7/1/E/71E5548E-CE2B-41F4-8015-79B8A8C8577D/BTS2013R2Evaluation_EN.exe"
   $stagingDir = 'C:/tmp'
   $biztalkStagingDir = "$stagingDir/biztalk"
+  $biztalkCabPath = "C:/Users/Administrator/Downloads/BtsRedistW2K12EN64.cab"
   $zipCommand = join(['"C:/Program Files/7-zip/7z.exe"', ' x BTS2013R2Evaluation_EN.exe -y ',' -o"',$biztalkStagingDir,'"'])
-  $silentInstallCmd = "Setup.exe /quiet /norestart /addlocal all /cabpath C:\\Users\\Administrator\\Downloads\\"
+  $silentInstallCmd = "Setup.exe /quiet /passive /norestart /addlocal all /cabpath $biztalkCabPath"
 
   file { $stagingDir:
     ensure => 'directory',
@@ -26,7 +27,7 @@ class biztalk {
      cwd => $stagingDir,
      provider => powershell,
      logoutput => true,
-     creates => "C:/Users/Administrator/Downloads/BtsRedistW2K12EN64.cab"
+     creates => $biztalkCabPath
    } ~>
    exec { "Enable Biztalk Prerequisite Windows Features" :
      command => file("biztalk/BizTalkWindowsFeatures.ps1"),
