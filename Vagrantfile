@@ -18,6 +18,7 @@ Vagrant.configure(2) do |config|
   config.winrm.username = $windows_username
   config.winrm.transport = :plaintext
   config.winrm.basic_auth_only = true
+  config.winrm.timeout = 1800
   config.vm.guest = :windows
   # setup each machine.
   $ec2_instances.each do |ec2_instance|
@@ -67,7 +68,7 @@ Vagrant.configure(2) do |config|
     # remote manifest path
     puppet.manifests_path = ["vm", "C:/Users/Administrator/biztalk-provisioner/manifests"]
     # remote module Path: https://github.com/mitchellh/vagrant/issues/2902
-    puppet.options = ["--modulepath C:/Users/Administrator/biztalk-provisioner/modules"]
+    puppet.options = ['--modulepath C:/Users/Administrator/biztalk-provisioner/modules;C:/ProgramData/PuppetLabs/puppet/etc/modules']
     puppet.manifest_file = "default.pp"
     puppet.binary_path = "C:/puppet/bin"
   end

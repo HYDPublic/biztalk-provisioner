@@ -1,29 +1,6 @@
-param(
-  [Parameter(Mandatory=$true)]
-  [ValidateSet("2016", "2013R2", "2013", "2010", "2009", "2006R2")]
-  [String] $BTVersion,
-
-  [Parameter(Mandatory=$true)]
-  [ValidateSet("2016","2012R2","10","8.1")]
-  [String] $winversion
-
-  [Parameter(Mandatory=$true)]
-  [ValidateSet("32","64")]
-  [String] $bits
-
-)
-
-﻿<#
-.SYNOPSIS
-Download BizTalk Server prerequisite CAB-file (English)
-.DESCRIPTION
-This script downloads the prerequisite CAB-file for BizTalk Server. User is prompted for BizTalk and Windows version and bits
-.EXAMPLE
-./DownloadBizTalkCAB.ps1
-.NOTES
-File will be downloaded in current user's Download folder
-#>
-cls
+$BTVersion = "2013R2"
+$winversion = "2012R2"
+$bits = "64"
 
 # Get filename from URL
 function getfilename($source) {
@@ -89,7 +66,7 @@ elseif ($BTversion -eq "2013") {
                 32 { $source = "http://download.microsoft.com/download/2/7/C/27CE697C-9869-42DB-A22A-95B76DE842AE/BtsRedistWin8EN32.cab" }
             }
         }
-        "7" { 
+        "7" {
             switch ($bits) {
                 64 { $source = "http://download.microsoft.com/download/2/7/C/27CE697C-9869-42DB-A22A-95B76DE842AE/BtsRedistWin7EN64.cab" }
                 32 { $source = "http://download.microsoft.com/download/2/7/C/27CE697C-9869-42DB-A22A-95B76DE842AE/BtsRedistWin7EN32.cab" }
