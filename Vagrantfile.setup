@@ -7,7 +7,7 @@
 ##################
 
 $errMsg = ""
-required_plugins = ["vagrant-aws","vagrant-awsinfo","vagrant-host-shell"]
+required_plugins = ["vagrant-aws","vagrant-awsinfo","vagrant-host-shell","vagrant-winrm-syncedfolders"]
 required_plugins.each { |r|
   unless Vagrant.has_plugin?(r)
     $errMsg = $errMsg + "Vagrant Plugin #{r} required! Please run vagrant plugin install #{r} first.\n"
