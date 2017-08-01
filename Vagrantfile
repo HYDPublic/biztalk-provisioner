@@ -30,7 +30,10 @@ Vagrant.configure(2) do |config|
         override.winrm.password = "VagrantRocks"
 
         # issue #5: synced folders do not appear to work
-        override.vm.synced_folder ".", "/vagrant", disabled: true
+        #override.vm.synced_folder ".", "/vagrant", disabled: true
+
+        # TODO this uses https://github.com/Cimpress-MCP/vagrant-winrm-syncedfolders
+        config2.vm.synced_folder ".", "C:/vagrant", type: "winrm"
 
         ec2.keypair_name = $keypair_name
         ec2.access_key_id = $access_key_id
@@ -53,30 +56,33 @@ Vagrant.configure(2) do |config|
   ###################
 
 
-  # sync current directory to remote server
-  $cmd = "powershell -executionpolicy unrestricted \
-    ./scripts/rsync.ps1 -localPath #{Dir.pwd} \
-    -remoteServer #{$aws_elastic_ip} \
-    -remotePath C:/Users/Administrator/biztalk-provisioner \
-    -username Administrator -password VagrantRocks"
-  config.vm.provision :host_shell do |host_shell|
-      host_shell.inline = $cmd
+  # # sync current directory to remote server
+  # $cmd = "powershell -executionpolicy unrestricted \
+  #   ./scripts/rsync.ps1 -localPath #{Dir.pwd} \
+  #   -remoteServer #{$aws_elastic_ip} \
+  #   -remotePath C:/Users/Administrator/biztalk-provisioner \
+  #   -username Administrator -password VagrantRocks"
+  # config.vm.provision :host_shell do |host_shell|
+  #     host_shell.inline = $cmd
+  # end
+
+
+  config.vm.provision :shell do |s|
+    s.path = "scripts/install_puppet_modules.ps1"
   end
 
   # provision with puppet
   config.vm.provision :puppet do |puppet|
     # remote manifest path
-    puppet.manifests_path = ["vm", "C:/Users/Administrator/biztalk-provisioner/manifests"]
+    puppet.manifests_path = "manifests"
     # remote module Path: https://github.com/mitchellh/vagrant/issues/2902
-    puppet.options = ['--modulepath C:/Users/Administrator/biztalk-provisioner/modules;C:/ProgramData/PuppetLabs/puppet/etc/modules']
+    puppet.module_path = "modules"
     puppet.manifest_file = "default.pp"
     puppet.binary_path = "C:/puppet/bin"
+    # TODO this uses https://github.com/Cimpress-MCP/vagrant-winrm-syncedfolders
+    puppet.synced_folder_type = "winrm"
   end
 
-  # TODO
-  # automate installation of modules
-  # https://forge.puppet.com/puppetlabs/powershell
-  # https://forge.puppet.com/puppet/download_file/
 
 
 end

@@ -1,7 +1,3 @@
-   ~>
-
-
-
 class biztalk {
   $downloadURL = "https://download.microsoft.com/download/7/1/E/71E5548E-CE2B-41F4-8015-79B8A8C8577D/BTS2013R2Evaluation_EN.exe"
   $stagingDir = 'C:/tmp'
