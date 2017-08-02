@@ -1,10 +1,55 @@
 # biztalk-provisioner
-Automated provisioner for BizTalk Server.
+Automated Vagrant + AWS provisioner for BizTalk Server.
 
+## How to run
+
+Clone this repository, and `cd` to the `biztalk-provisioner` dir.
+
+Run `vagrant up` or `vagrant up --debug` as needed, in a Powershell terminal.
+
+:exclamation: _Note the prerequisites below!_
+
+### Prerequisites
+
+The provisioner uses Vagrant, AWS, Powershell and Puppet; knowledge of these tools is assumed.
+
+Additionally you need an AWS account.
+
+The following environment variables need to be set and visible to Vagrant:
+
+```
+VAGRANT_AWS_KEYPAIR_NAME: AWS keypair to use for authentication e.g aws_keypair.pem
+VAGRANT_AWS_KEY_PATH: Location of AWS keypair e.g /home/vish/.ssh/aws_keypair.pem
+VAGRANT_AWS_ACCESS_KEY
+VAGRANT_AWS_SECRET_KEY
+VAGRANT_AWS_SECURITY_GROUP: AWS Security group name (see "Port Requirements" below)
+VAGRANT_AWS_ELASTIC_IP: An elastic IP to allocate to the instance.
+```
+
+### Why is an Elastic IP needed?
+
+Several steps (e.g adding the remote server to `TrustedHosts` in Powershell) require knowledge of the IP address in advance.
+
+Automation is simplified overall if the IP is predictable across provisioning runs.
+
+### Port Requirements
+
+HTTP Basic authentication is used (for simplicity and as a first step) for communication over WinRM.
+
+This means the AWS Security group should have *at least* port 5985 open for WinRM to work.
+
+Additionally to connect over RDP to the running instance you need port 3389 open.
+
+As an example, I have the following generic ports opened:
+
+```
+5985, 5986: for both HTTP and HTTPS based WinRM communication
+3389: for RDP
+137-139, 445: for future Samba connectivity
+```
 ## Notes
 
 ### Needs to run on Windows + Powershell
-
 Many steps of the Vagrantfile require Powershell, so do not run this Vagrantfile on Linux or Cygwin. Ideally you should use Powershell to run `vagrant up`.
 
 ## Troubleshooting

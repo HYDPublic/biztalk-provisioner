@@ -32,7 +32,7 @@ $aws_elastic_ip = ENV['VAGRANT_AWS_ELASTIC_IP']
 # windows server 2012 R2 required for BizTalk 2013 R2
 $aws_ami = "ami-3d770c52"
 $aws_region = "ap-south-1"
-$aws_zone = "ap-south-1a"
+$aws_zone = "ap-south-1b"
 
 # windows 2012 AMI username is always administrator
 $windows_username = "Administrator"
