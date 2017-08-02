@@ -24,7 +24,7 @@ class biztalk {
 # "BizTalk,WMI,InfoWorkerApps,BAMPortal,Documentation,Runtime,Engine,MOT,MSMQ,MsEDIAS2,MsEDIAS2StatusReporting,WCFAdapter,AdminAndMonitoring,AdminTools,MonitoringAndTracking,BizTalkAdminSnapIn,BAMTools,PAM,WcfAdapterAdminTools,SSOAdmin,SSOServer,RulesEngine,OLAPNS,FBAMCLIENT,BAMEVENTAPI,ProjectBuildComponent" `
 #  /cabpath "C:/Users/Administrator/Downloads/BtsRedistW2K12EN64.cab"
 
-  $biztalkSilentInstallCmd = ".\Setup.exe /L $biztalkInstallLog /passive /norestart /addlocal \"$biztalkAddLocalOptions\" /cabpath $biztalkCabPath"
+  $biztalkSilentInstallCmd = ".\\Setup.exe /L $biztalkInstallLog /passive /norestart /addlocal \"$biztalkAddLocalOptions\" /cabpath $biztalkCabPath"
 
   file { $stagingDir:
     ensure => 'directory',
@@ -63,7 +63,7 @@ class biztalk {
    } ~>
    exec { "Install Biztalk Server from commandline" :
      command => $biztalkSilentInstallCmd,
-     cwd => $stagingDir,
+     cwd => "$biztalkStagingDir/BT Server/",
      provider => powershell,
      logoutput => true
    }
